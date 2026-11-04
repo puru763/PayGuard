@@ -53,16 +53,16 @@ mod tests {
 
     #[test]
     fn test_money_math() {
-        let m1 = Paise(50050);
+        let m1 = Paise(50050); 
         let m2 = Paise(10025);
-
+        
         assert_eq!(m1 + m2, Paise(60075));
         assert_eq!(m1 - m2, Paise(40025));
     }
 
     #[test]
     fn test_display() {
-        let m = Paise(164);
+        let m = Paise(164); 
         assert_eq!(format!("{}", m), "₹1.64");
     }
 }
