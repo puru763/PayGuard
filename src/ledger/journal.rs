@@ -24,7 +24,7 @@ pub struct JournalEntry {
 }
 
 impl JournalEntry {
-    /// Creates a multi-leg journal entry after strictly verifying that 
+    /// Creates a multi-leg journal entry after strictly verifying that
     /// Total Debits == Total Credits using our loop and if/else accumulator.
     pub fn create(
         legs: Vec<TransactionLeg>,
@@ -46,15 +46,20 @@ impl JournalEntry {
 
         for leg in &legs {
             if leg.amount.0 <= 0 {
-                return Err(format!("Leg amount for account '{}' must be greater than zero.", leg.account));
+                return Err(format!(
+                    "Leg amount for account '{}' must be greater than zero.",
+                    leg.account
+                ));
             }
 
             // The if/else sorting mechanism separating left (debit) and right (credit) buckets
             if leg.is_debit {
-                total_debits = total_debits.checked_add(leg.amount.0)
+                total_debits = total_debits
+                    .checked_add(leg.amount.0)
                     .ok_or("Integer overflow calculating total debits")?;
             } else {
-                total_credits = total_credits.checked_add(leg.amount.0)
+                total_credits = total_credits
+                    .checked_add(leg.amount.0)
                     .ok_or("Integer overflow calculating total credits")?;
             }
         }
@@ -63,11 +68,12 @@ impl JournalEntry {
         if total_debits != total_credits {
             return Err(format!(
                 "Transaction out of balance! Total Debits: ₹{}, Total Credits: ₹{}",
-                Paise(total_debits), Paise(total_credits)
+                Paise(total_debits),
+                Paise(total_credits)
             ));
         }
 
-        let id = Uuid::v4();
+        let id = Uuid::new_v4();
 
         // 4. Compute SHA-256 cryptographic hash for tamper-evident audit chaining
         let entry_hash = Self::calculate_hash(&id, &timestamp, &legs, &description, &previous_hash);
@@ -131,12 +137,12 @@ mod tests {
             TransactionLeg {
                 account: "asset:bank_axis".to_string(),
                 amount: Paise::from_rupees(1000),
-                is_debit: true, 
+                is_debit: true,
             },
             TransactionLeg {
                 account: "liability:user_wallet_101".to_string(),
                 amount: Paise::from_rupees(1000),
-                is_debit: false, 
+                is_debit: false,
             },
         ];
 
@@ -159,7 +165,7 @@ mod tests {
             },
             TransactionLeg {
                 account: "liability:user_wallet_101".to_string(),
-                amount: Paise::from_rupees(900), 
+                amount: Paise::from_rupees(900),
                 is_debit: false,
             },
         ];

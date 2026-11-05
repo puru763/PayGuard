@@ -21,8 +21,7 @@ impl Config {
             .parse::<u16>()
             .map_err(|_| "Environment variable 'SERVER_PORT' must be a valid u16 port number.")?;
 
-        let environment = env::var("ENVIRONMENT")
-            .unwrap_or_else(|_| "development".to_string());
+        let environment = env::var("ENVIRONMENT").unwrap_or_else(|_| "development".to_string());
 
         Ok(Self {
             database_url,

@@ -22,8 +22,11 @@ impl Paise {
 impl Add for Paise {
     type Output = Self;
 
-    fn add(self, rhs: Self) -> Self.Output {
-        let res = self.0.checked_add(rhs.0).expect("Integer overflow in money addition!");
+    fn add(self, rhs: Self) -> Self {
+        let res = self
+            .0
+            .checked_add(rhs.0)
+            .expect("Integer overflow in money addition!");
         Paise(res)
     }
 }
@@ -32,8 +35,11 @@ impl Add for Paise {
 impl Sub for Paise {
     type Output = Self;
 
-    fn sub(self, rhs: Self) -> Self.Output {
-        let res = self.0.checked_sub(rhs.0).expect("Integer underflow in money subtraction!");
+    fn sub(self, rhs: Self) -> Self {
+        let res = self
+            .0
+            .checked_sub(rhs.0)
+            .expect("Integer underflow in money subtraction!");
         Paise(res)
     }
 }
@@ -53,16 +59,16 @@ mod tests {
 
     #[test]
     fn test_money_math() {
-        let m1 = Paise(50050); 
+        let m1 = Paise(50050);
         let m2 = Paise(10025);
-        
+
         assert_eq!(m1 + m2, Paise(60075));
         assert_eq!(m1 - m2, Paise(40025));
     }
 
     #[test]
     fn test_display() {
-        let m = Paise(164); 
+        let m = Paise(164);
         assert_eq!(format!("{}", m), "₹1.64");
     }
 }
